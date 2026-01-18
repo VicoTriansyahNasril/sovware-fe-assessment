@@ -26,6 +26,13 @@ export const ProcessorModal = ({ isOpen, onClose, onAdd }: ProcessorModalProps) 
         }
     };
 
+    const onDragStart = (event: React.DragEvent, processorId: string) => {
+        event.dataTransfer.setData('application/reactflow/type', 'processorNode');
+        event.dataTransfer.setData('application/reactflow/label', processorId);
+        event.dataTransfer.effectAllowed = 'move';
+        onClose();
+    };
+
     return (
         <Modal
             isOpen={isOpen}
@@ -49,8 +56,8 @@ export const ProcessorModal = ({ isOpen, onClose, onAdd }: ProcessorModalProps) 
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
                                     className={`flex items-center gap-3 px-5 py-3.5 rounded-xl text-sm font-semibold transition-all text-left ${selectedCategory === cat.id
-                                            ? 'bg-[#D1D5DB] text-[#1E1E1E] shadow-sm'
-                                            : 'text-gray-600 hover:bg-[#D1D5DB]/50'
+                                        ? 'bg-[#D1D5DB] text-[#1E1E1E] shadow-sm'
+                                        : 'text-gray-600 hover:bg-[#D1D5DB]/50'
                                         }`}
                                 >
                                     {cat.icon && <cat.icon size={20} strokeWidth={2.5} />}
@@ -68,12 +75,14 @@ export const ProcessorModal = ({ isOpen, onClose, onAdd }: ProcessorModalProps) 
                                         <div
                                             key={proc.id}
                                             onClick={() => setSelectedProcessor(proc.id)}
+                                            draggable
+                                            onDragStart={(event) => onDragStart(event, proc.id)}
                                             className={`
-                            relative flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all bg-white
-                            ${isSelected
+                                                relative flex items-start gap-4 p-4 rounded-xl cursor-grab active:cursor-grabbing transition-all bg-white
+                                                ${isSelected
                                                     ? 'border-2 border-[#2D68A2] shadow-md z-10'
                                                     : 'border border-transparent hover:shadow-sm hover:bg-white'} 
-                            `}
+                                            `}
                                         >
                                             <div className="mt-1 flex-shrink-0">
                                                 <proc.icon size={24} strokeWidth={2.5} className="text-[#1E1E1E]" />

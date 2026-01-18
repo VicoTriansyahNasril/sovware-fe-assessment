@@ -18,6 +18,7 @@ const FlowBuilderContent = () => {
     const {
         nodes, edges, onNodesChange, onEdgesChange,
         onConnect, onNodesDelete, onEdgesDelete,
+        onDragOver, onDrop,
         flowWrapperRef,
         modals, toggleModal,
         handleAddProcessor, handleAddConnection,
@@ -42,6 +43,8 @@ const FlowBuilderContent = () => {
                     onNodesDelete={onNodesDelete}
                     onEdgesDelete={onEdgesDelete}
                     onConnect={onConnect}
+                    onDragOver={onDragOver}
+                    onDrop={onDrop}
                     nodeTypes={nodeTypes}
                     edgeTypes={edgeTypes}
                     fitView

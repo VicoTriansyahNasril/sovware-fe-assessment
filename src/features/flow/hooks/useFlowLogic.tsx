@@ -16,6 +16,8 @@ export interface UseFlowLogicReturn {
     onConnect: (params: Connection) => void;
     onNodesDelete: OnNodesDelete;
     onEdgesDelete: OnEdgesDelete;
+    onDragOver: (event: React.DragEvent) => void;
+    onDrop: (event: React.DragEvent) => void;
     flowWrapperRef: RefObject<HTMLDivElement | null>;
     modals: {
         processor: boolean;
@@ -34,7 +36,7 @@ export interface UseFlowLogicReturn {
 export const useFlowLogic = (): UseFlowLogicReturn => {
     const [nodes, setNodes, onNodesChange] = useNodesState<AppNode>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-    const { getNodes } = useReactFlow();
+    const { getNodes, screenToFlowPosition } = useReactFlow();
     const flowWrapperRef = useRef<HTMLDivElement>(null);
 
     const [modals, setModals] = useState({
@@ -49,6 +51,40 @@ export const useFlowLogic = (): UseFlowLogicReturn => {
     const toggleModal = useCallback((modal: keyof typeof modals, isOpen: boolean) => {
         setModals(prev => ({ ...prev, [modal]: isOpen }));
     }, []);
+
+    const onDragOver = useCallback((event: React.DragEvent) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }, []);
+
+    const onDrop = useCallback(
+        (event: React.DragEvent) => {
+            event.preventDefault();
+
+            const type = event.dataTransfer.getData('application/reactflow/type');
+            const label = event.dataTransfer.getData('application/reactflow/label');
+
+            if (typeof type === 'undefined' || !type || !label) {
+                return;
+            }
+
+            const position = screenToFlowPosition({
+                x: event.clientX,
+                y: event.clientY,
+            });
+
+            const newNode: AppNode = {
+                id: `node_${Date.now()}`,
+                type: 'processorNode',
+                position,
+                data: { label, iconType: 'Cpu' },
+            };
+
+            setNodes((nds) => nds.concat(newNode));
+            toast.success(`${label} dropped`);
+        },
+        [screenToFlowPosition, setNodes],
+    );
 
     const handleAddProcessor = useCallback((processorId: string) => {
         const existingNodes = getNodes();
@@ -158,6 +194,7 @@ export const useFlowLogic = (): UseFlowLogicReturn => {
     return {
         nodes, edges, onNodesChange, onEdgesChange,
         onConnect, onNodesDelete, onEdgesDelete,
+        onDragOver, onDrop,
         flowWrapperRef,
         modals, toggleModal,
         handleAddProcessor,
