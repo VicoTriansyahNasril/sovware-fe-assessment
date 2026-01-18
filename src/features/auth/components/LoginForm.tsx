@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa';
 import { useAuthStore } from '@/store/useAuthStore';
 import { loginApi } from '../api/authMock';
@@ -9,8 +8,11 @@ import logoSvg from '@/assets/logo.svg';
 import { FormInput } from '@/components/ui/FormInput';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 
-export const LoginForm = () => {
-    const navigate = useNavigate();
+interface LoginFormProps {
+    onLoginSuccess: () => void;
+}
+
+export const LoginForm = ({ onLoginSuccess }: LoginFormProps) => {
     const login = useAuthStore((state) => state.login);
 
     const [email, setEmail] = useState('');
@@ -20,7 +22,6 @@ export const LoginForm = () => {
     const [rememberMe, setRememberMe] = useState(true);
 
     const [errors, setErrors] = useState({ email: '', password: '' });
-
     const [errorModal, setErrorModal] = useState({ isOpen: false, message: '' });
 
     const toggleVisibility = () => setIsVisible(!isVisible);
@@ -49,7 +50,6 @@ export const LoginForm = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         if (!validate()) return;
 
         setIsLoading(true);
@@ -57,11 +57,11 @@ export const LoginForm = () => {
         try {
             const response = await loginApi(email, password);
             login(response.user, response.token);
-            navigate('/dashboard');
+            onLoginSuccess();
+
         } catch (error) {
             const errMessage = error instanceof Error ? error.message : "Invalid credentials provided.";
             setErrorModal({ isOpen: true, message: errMessage });
-        } finally {
             setIsLoading(false);
         }
     };
@@ -79,21 +79,14 @@ export const LoginForm = () => {
     return (
         <>
             <div className="w-full max-w-[367px] px-0 flex flex-col items-center">
-
                 <div className="flex flex-col items-center mb-8 text-center">
                     <div className="mb-4">
                         <img src={logoSvg} alt="S.2.R.E Logo" className="w-[42px] h-[42px]" />
                     </div>
-
                     <div className="flex flex-row items-center gap-1 mb-2">
-                        <span className="font-inter font-semibold text-[24px] text-[#2D68A2]">
-                            Welcome to
-                        </span>
-                        <span className="font-inter font-black text-[20px] text-[#2D68A2]">
-                            S.2.R.E ADMIN
-                        </span>
+                        <span className="font-inter font-semibold text-[24px] text-[#2D68A2]">Welcome to</span>
+                        <span className="font-inter font-black text-[20px] text-[#2D68A2]">S.2.R.E ADMIN</span>
                     </div>
-
                     <p className="font-poppins font-medium text-[16px] text-[#2D68A2]">
                         Please login with your registered account.
                     </p>
@@ -137,7 +130,6 @@ export const LoginForm = () => {
                                     onChange={(e) => setRememberMe(e.target.checked)}
                                 />
                                 <div className="w-[18px] h-[18px] border-[1.5px] border-[#D1D5DB] rounded-[4px] bg-white peer-checked:bg-[#2D68A2] peer-checked:border-[#2D68A2] transition-all"></div>
-
                                 <svg
                                     className="absolute top-[3px] left-[3px] w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"
                                     viewBox="0 0 16 16"
@@ -147,9 +139,7 @@ export const LoginForm = () => {
                                     <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
-                            <span className="ml-2 text-[14px] text-[#666666] font-normal group-hover:text-[#2D68A2] transition-colors">
-                                Remember Me
-                            </span>
+                            <span className="ml-2 text-[14px] text-[#666666] font-normal group-hover:text-[#2D68A2] transition-colors">Remember Me</span>
                         </label>
                     </div>
 

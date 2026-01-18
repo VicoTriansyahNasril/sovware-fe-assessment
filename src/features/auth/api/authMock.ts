@@ -19,7 +19,7 @@ export const loginApi = async (email: string, password: string): Promise<AuthRes
                     token: "mock-jwt-token-" + Math.random().toString(36).substr(2),
                 });
             } else {
-                reject(new Error("Invalid credentials"));
+                reject(new Error("You must confirm your email address first before performing this action."));
             }
         }, 1500);
     });

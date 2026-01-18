@@ -1,73 +1,134 @@
-# React + TypeScript + Vite
+# 🚀 Sovware Frontend Assessment - Flow Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-performance, pixel-perfect simplified version of Apache NiFi's flow builder. Built with modern React ecosystem focusing on Clean Code, Strict Typing, and Enterprise Architecture.
 
-Currently, two official plugins are available:
+![App Screenshot](https://via.placeholder.com/800x400?text=Sovware+Flow+Builder)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Key Features
 
-## React Compiler
+### 1. Authentication Module (`/features/auth`)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Secure Login**: Mock API integration with loading states and error handling.
+- **Splash Screen**: Smooth transition animation upon successful login.
+- **Session Management**: Zustand persist middleware for token storage.
+- **Logout Confirmation**: Modal confirmation before clearing session.
 
-## Expanding the ESLint configuration
+### 2. Dashboard (`/features/dashboard`)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Class Management**: Interactive list of design classes.
+- **Pixel Perfect UI**: Custom search bar, sidebar navigation, and status indicators matching Figma.
+- **Flow Versioning**: Modal to select/create flow versions before entering design mode.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 3. Flow Builder Canvas (`/features/flow`)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Powered by React Flow**: High-performance canvas engine.
+- **Floating Controls**: Custom toolbar overlay for better UX.
+- **Drag & Drop**: Add processors via modal selection.
+- **Connection Logic**:
+  - Custom Edge with "Success" labels.
+  - Validation (prevent self-loops).
+  - Connection Modal configuration.
+- **Keyboard Shortcuts**:
+  - `Delete` / `Backspace`: Remove selected nodes/edges.
+  - `Shift + Drag`: Multi-selection.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 4. Publish System
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Validation Engine**: Checks for isolated nodes before publishing.
+- **JSON Preview**: Live preview of the generated flow configuration.
+- **Success Feedback**: Custom toast notification with progress bar.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Tech Stack
+
+- **Core**: React 18 (Vite), TypeScript
+- **Styling**: Tailwind CSS, HeroUI (NextUI)
+- **State Management**: Zustand
+- **Canvas Engine**: @xyflow/react (React Flow 12)
+- **Icons**: Lucide React, React Icons
+- **Animation**: Framer Motion
+- **Utilities**: React Hot Toast, CLSX
+
+---
+
+## 🏃‍♂️ Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+
+1.  Clone the repository
+
+    ```bash
+    git clone https://github.com/VicoTriansyahNasril/sovware-fe-assessment.git
+    cd sovware-fe-assessment
+    ```
+
+2.  Install dependencies
+
+    ```bash
+    npm install
+    ```
+
+3.  Start development server
+
+    ```bash
+    npm run dev
+    ```
+
+4.  Open `http://localhost:5173` in your browser.
+
+### Login Credentials
+
+- **Email**: `admin@sovware.com`
+- **Password**: `admin123`
+
+---
+
+## 🐳 Docker Deployment
+
+Build and run the application in a production-ready Nginx container.
+
+1.  **Build Image**
+
+    ```bash
+    docker build -t sovware-fe .
+    ```
+
+2.  **Run Container**
+
+    ```bash
+    docker run -p 8080:80 sovware-fe
+    ```
+
+3.  Access at `http://localhost:8080`
+
+---
+
+## 📂 Project Structure (Feature-Based)
+
+src/
+├── components/ # Shared UI components (Buttons, Inputs, Layouts)
+├── features/ # Feature-specific logic & components
+│ ├── auth/ # Authentication feature
+│ ├── dashboard/ # Dashboard feature
+│ └── flow/ # Flow Builder feature (Canvas, Nodes, Modals)
+├── pages/ # Page composition roots
+├── store/ # Global Zustand stores
+└── utils/ # Helper functions
+
+---
+
+## ✅ Assessment Checklist
+
+- [x] **User Authentication**: Login, Validation, Token Storage.
+- [x] **Design Flow**: Canvas, Custom Nodes, Toolbar.
+- [x] **Processor Connection**: Connect nodes, Custom Edges.
+- [x] **Publish Design**: Validation, JSON Output, Success Toast.
+- [x] **Bonus**: Docker Support, Strict TypeScript, Clean Code.
+
+---

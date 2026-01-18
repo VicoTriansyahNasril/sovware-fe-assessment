@@ -1,16 +1,31 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ReactNode } from 'react';
 import LoginPage from '@/pages/LoginPage';
+import DashboardPage from '@/pages/DashboardPage';
+import DesignPage from '@/pages/DesignPage';
 import { useAuthStore } from '@/store/useAuthStore';
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return isAuthenticated ? (
-    <>{children}</>
-  ) : (
-    <Navigate to="/login" replace />
-  );
+  const logout = useAuthStore((state) => state.logout);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const token = localStorage.getItem('auth-storage');
+      if (!token) {
+        logout();
+        navigate('/login');
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [logout, navigate]);
+
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
 const App = () => {
@@ -25,11 +40,7 @@ const App = () => {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <div className="p-10 text-center">
-                <h1 className="text-3xl font-bold">Dashboard Placeholder</h1>
-                <p>Welcome to Sovware Flow Builder</p>
-                <a href="/design" className="text-blue-500 underline mt-4 block">Go to Design Flow</a>
-              </div>
+              <DashboardPage />
             </ProtectedRoute>
           }
         />
@@ -38,7 +49,7 @@ const App = () => {
           path="/design"
           element={
             <ProtectedRoute>
-              <div className="p-10">Design Flow Placeholder</div>
+              <DesignPage />
             </ProtectedRoute>
           }
         />
